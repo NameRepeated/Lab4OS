@@ -1,8 +1,26 @@
 .extern start_kernel
 
-    .section .text.entry
+    .section .text.init
     .globl _start
 _start:
+    # ------------------
+
+        # set stvec = _traps
+
+    # ------------------
+
+        # set sie[STIE] = 1
+
+    # ------------------
+
+        # set first time interrupt
+
+    # ------------------
+
+        # set sstatus[SIE] = 1
+
+    # ------------------
+
     la sp, boot_stack_top # 将预留的栈空间写入 $sp
     call start_kernel # 跳转至 main.c 中的 start_kernel 函数
 
