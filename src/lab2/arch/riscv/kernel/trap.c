@@ -1,4 +1,6 @@
 // trap.c 
+#include "printk.h"
+#include "clock.h"
 
 void trap_handler(unsigned long scause, unsigned long sepc) {
     // 通过 `scause` 判断trap类型
@@ -7,4 +9,12 @@ void trap_handler(unsigned long scause, unsigned long sepc) {
     // `clock_set_next_event()` 见 4.5 节
     // 其他interrupt / exception 可以直接忽略
 
+    if (scause & (1UL << 63)) {
+        if (scause & (1UL << 4)) {
+            printk("[S] Supervisor Mode Timer Interrupt\n");
+            clock_set_next_event();
+        }
+        else {}
+    }
+    else {}
 }

@@ -4,10 +4,9 @@
 extern void test();
 
 int start_kernel() {
-    // printk(2021);
-    printk(" Hello RISC-V\n");
+    printk("%d Hello RISC-V\n", 2021);
 
-    test(); // DO NOT DELETE !!!
+    test();
 
 	return 0;
 }
