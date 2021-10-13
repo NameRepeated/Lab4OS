@@ -3,25 +3,24 @@
     .section .text.init
     .globl _start
 _start:
-    # ------------------
-
-        # set stvec = _traps
-
-    # ------------------
-
-        # set sie[STIE] = 1
-
-    # ------------------
-
-        # set first time interrupt
-
-    # ------------------
-
-        # set sstatus[SIE] = 1
-
-    # ------------------
-
     la sp, boot_stack_top # 将预留的栈空间写入 $sp
+
+    # set stvec = _traps
+    la t0, _traps
+    csrw stvec, t0
+
+    # set sie[STIE] = 1
+    csrr t0, sie
+    ori t0, t0, 32  # STIE 在 sie 的第五比特位
+    csrw sie, t0
+
+    # set first time interrupt
+
+    # set sstatus[SIE] = 1
+    csrr t0, sstatus
+    ori t0, t0, 2  # SIE 在 sstatus 的第一比特位
+    csrw sstatus, t0
+
     call start_kernel # 跳转至 main.c 中的 start_kernel 函数
 
     .section .bss.stack
