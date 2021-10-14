@@ -20,7 +20,7 @@ _start:
     sd ra, 0(sp)
 
     rdtime a0
-    li a1, 0xffffff
+    li a1, 10000000
     add a0, a0, a1
     call sbi_set_timer
 
