@@ -16,16 +16,10 @@ _start:
     csrw sie, t0
 
     # set first time interrupt
-    addi sp, sp, -8
-    sd ra, 0(sp)
-
     rdtime a0
     li a1, 10000000
     add a0, a0, a1
     call sbi_set_timer
-
-    ld ra, 0(sp)
-    addi sp, sp, 8
 
     # set sstatus[SIE] = 1
     csrr t0, sstatus
