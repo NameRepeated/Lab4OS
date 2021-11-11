@@ -22,9 +22,7 @@ _start:
     call sbi_set_timer
 
     # set sstatus[SIE] = 1
-    csrr t0, sstatus
-    ori t0, t0, 1<<1  # SIE 在 sstatus 的第一比特位
-    csrw sstatus, t0
+    csrsi sstatus, 1<<1  # SIE 在 sstatus 的第一比特位
 
     call start_kernel # 跳转至 main.c 中的 start_kernel 函数
 
