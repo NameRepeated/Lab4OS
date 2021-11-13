@@ -1,5 +1,5 @@
-// clock.c
 #include "sbi.h"
+#include "clock.h"
 
 // QEMU中时钟的频率是10MHz, 也就是1秒钟相当于10000000个时钟周期。
 unsigned long TIMECLOCK = 10000000;

@@ -1,5 +1,6 @@
 .extern start_kernel
 .extern sbi_set_timer
+.extern task_init
 
     .section .text.init
     .globl _start
@@ -23,6 +24,8 @@ _start:
 
     # set sstatus[SIE] = 1
     csrsi sstatus, 1<<1  # SIE 在 sstatus 的第一比特位
+
+    # call task_init
 
     call start_kernel # 跳转至 main.c 中的 start_kernel 函数
 
