@@ -47,6 +47,9 @@ void task_init() {
         task[i]->thread.sp = (uint64)(task[i]+PGSIZE-1);
     }
 
+    // printk("OffsetOfRaInTask = %d\n", OffsetOfRaInTask);
+    // printk("OffsetOfSpInTask = %d\n", OffsetOfSpInTask);
+    // printk("OffsetOfSInTask = %d\n", OffsetOfSInTask);
     printk("...proc_init done!\n");
 }
 
@@ -65,10 +68,76 @@ void dummy() {
 
 void switch_to(struct task_struct* next) {
     if (current != next) {
+    #ifdef SJF
+        printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
+    #endif 
+
+    #ifdef PRIORITY
         printk("switch to [PID = %d PRIORITY = %d COUNTER = %d]\n", next->pid, next->priority, next->counter);
+    #endif
+
         struct task_struct* prev = current;
         current = next;
         __switch_to(prev, next);
     }
     else return;
+}
+
+void do_timer(void) {
+    /* 如果当前线程是 idle 线程 直接进行调度 */
+    if (current == idle) {
+        schedule();
+    }
+    /* 如果当前线程不是 idle 对当前线程的运行剩余时间减 1 
+       若剩余时间仍然大于0 则直接返回 否则进行调度 */
+    else {
+        current->counter--;
+        if (current->counter > 0) return;
+        else schedule();
+    }
+}
+
+void schedule() {
+#ifdef SJF
+    SJF_schedule();
+#endif
+
+#ifdef PRIORITY
+    Priority_schedule();
+#endif
+}
+
+void SJF_schedule() {
+    struct task_struct* next = current;
+    uint64 min_counter = -1;
+    for (int i = 1; i < NR_TASKS; i++) {
+        if (task[i]->counter <= 0) continue;
+        if (task[i]->counter < min_counter) {
+            min_counter = task[i]->counter;
+            next = task[i];
+        }
+    }
+
+    if (min_counter == -1) {
+        for (int i = 1; i < NR_TASKS; i++) {
+            task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
+            printk("SET [PID = %d COUNTER = %d]\n", task[i]->pid, task[i]->counter);
+        }
+        SJF_schedule();
+    }
+
+    switch_to(next);
+}
+
+void Priority_schedule() {
+    struct task_struct* next = current;
+    uint64 min_priority = -1;
+    for (int i = 1; i < NR_TASKS; i++) {
+        if (task[i]->priority < min_priority) {
+            min_priority = task[i]->counter;
+            next = task[i];
+        }
+    }
+
+    switch_to(next);
 }

@@ -1,3 +1,4 @@
+.extern mm_init
 .extern start_kernel
 .extern sbi_set_timer
 .extern task_init
@@ -12,20 +13,22 @@ _start:
     csrw stvec, t0
 
     # set sie[STIE] = 1
-    csrr t0, sie
-    ori t0, t0, 1<<5  # STIE 在 sie 的第五比特位
-    csrw sie, t0
+    li t0, 1<<5 # STIE 在 sie 的第五比特位
+    csrs sie, t0
 
     # set first time interrupt
     rdtime a0
-    li a1, 10000000
-    add a0, a0, a1
+    li t0, 10000000
+    add a0, a0, t0
     call sbi_set_timer
 
     # set sstatus[SIE] = 1
     csrsi sstatus, 1<<1  # SIE 在 sstatus 的第一比特位
 
-    # call task_init
+    la sp, boot_stack_top
+    call mm_init
+    
+    call task_init
 
     call start_kernel # 跳转至 main.c 中的 start_kernel 函数
 

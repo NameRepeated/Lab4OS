@@ -1,6 +1,8 @@
 #include "types.h"
 #include "sbi.h"
 
+const unsigned long SBI_TIMER_EXT_ID = 0x54494D45;
+
 struct sbiret sbi_ecall(int ext, int fid, uint64 arg0,
 			            uint64 arg1, uint64 arg2,
 			            uint64 arg3, uint64 arg4,
@@ -29,5 +31,5 @@ struct sbiret sbi_ecall(int ext, int fid, uint64 arg0,
 }
 
 void sbi_set_timer(uint64 stime_value) {
-    sbi_ecall(SBI_SET_TIMER, 0, stime_value, 0, 0, 0, 0, 0);
+    sbi_ecall(SBI_TIMER_EXT_ID, SBI_SET_TIMER, stime_value, 0, 0, 0, 0, 0);
 }

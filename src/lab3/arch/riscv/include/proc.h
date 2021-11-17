@@ -1,11 +1,14 @@
 #include "types.h"
 
-#define NR_TASKS  (1 + 31) // 用于控制 最大线程数量 （idle 线程 + 31 内核线程）
+#define NR_TASKS  (1 + 4) // 用于控制 最大线程数量 （idle 线程 + 31 内核线程）
 
 #define TASK_RUNNING    0 // 为了简化实验，所有的线程都只有一种状态
 
 #define PRIORITY_MIN 1
 #define PRIORITY_MAX 10
+
+#define COUNTER_MIN 1
+#define COUNTER_MAX 10
 
 #define OFFSET(TYPE , MEMBER) ((unsigned long)(&(((TYPE *)0)->MEMBER)))
 
@@ -48,3 +51,7 @@ void switch_to(struct task_struct* next);
 
 /* dummy funciton: 一个循环程序，循环输出自己的 pid 以及一个自增的局部变量*/
 void dummy();
+
+void SJF_schedule();
+
+void Priority_schedule();

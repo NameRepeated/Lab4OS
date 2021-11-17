@@ -1,8 +1,5 @@
 .extern trap_handler
 .extern dummy
-.extern OffsetOfRaInTask
-.extern OffsetOfSpInTask
-.extern OffserOfSInTask
 
 .altmacro
 .set REG_SIZE, 8
@@ -82,17 +79,11 @@ __dummy:
     .globl __switch_to
 __switch_to:
     # save state to prev process
-    la t1, OffsetOfRaInTask
-    la t2, OffsetOfSpInTask
-    la t3, OffsetOfSInTask
-
-    add t0, a0, t1
+    addi t0, a0, 40
     sd ra, 0(t0)
+    sd sp, 8(t0)
 
-    add t0, a0, t2
-    sd sp, 0(t0)
-
-    add t0, a0, t3
+    addi t0, a0, 56
     .set n, 0
     .rept 12
         SAVE_S_N t0, %n
@@ -100,13 +91,11 @@ __switch_to:
     .endr
 
     # restore state from next process
-    add t0, a1, t1
+    addi t0, a1, 40
     ld ra, 0(t0)
+    ld sp, 8(t0)
 
-    add t0, a1, t2
-    ld ra, 0(t0)
-
-    add t0, a1, t3
+    addi t0, a1, 56
     .set n, 0
     .rept 12
         LOAD_S_N t0, %n
