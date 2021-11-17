@@ -7,8 +7,8 @@ OBJCOPY=${CROSS_}objcopy
 ISA=rv64imafd
 ABI=lp64
 
-SCHEDULE=SJF
-# SCHEDULE=PRIORITY
+# SCHEDULE=SJF
+SCHEDULE=PRIORITY
 
 INCLUDE = -I $(shell pwd)/include -I $(shell pwd)/arch/riscv/include
 CF = -O3 -march=$(ISA) -mabi=$(ABI) -mcmodel=medany -fno-builtin -ffunction-sections -fdata-sections -nostartfiles -nostdlib -nostdinc -static -lgcc -Wl,--nmagic -Wl,--gc-sections 

@@ -4,7 +4,8 @@
 extern void test();
 
 int start_kernel() {
-    printk("%d Hello RISC-V\n", 2021);
+    printk("Hello RISC-V\n");
+    printk("idle process is running!\n");
 
     test();
 

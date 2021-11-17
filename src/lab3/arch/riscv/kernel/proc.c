@@ -45,7 +45,6 @@ void task_init() {
         // 为 task[1] ~ task[NR_TASKS - 1] 设置 `thread_struct` 中的 `ra` 和 `sp`, 其中 `ra` 设置为 __dummy （见 4.3.2）的地址， `sp` 设置为 该线程申请的物理页的高地址
         task[i]->thread.ra = (uint64)__dummy;
         task[i]->thread.sp = (uint64)(task[i])+PGSIZE;
-        // printk("task[%d]->ra = %d\n", task[i]->pid, task[i]->thread.ra);
     }
 
     // printk("OffsetOfRaInTask = %d\n", OffsetOfRaInTask);
@@ -110,21 +109,23 @@ void schedule() {
 
 void SJF_schedule() {
     struct task_struct* next = current;
-    uint64 min_counter = -1;
-    for (int i = 1; i < NR_TASKS; i++) {
-        if (task[i]->counter <= 0) continue;
-        if (task[i]->counter < min_counter) {
-            min_counter = task[i]->counter;
-            next = task[i];
-        }
-    }
-
-    if (min_counter == -1) {
+    uint64 min_counter = COUNTER_MAX+1;
+    while (1) {
         for (int i = 1; i < NR_TASKS; i++) {
-            task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
-            printk("SET [PID = %d COUNTER = %d]\n", task[i]->pid, task[i]->counter);
+            if (task[i]->counter == 0) continue;
+            if (task[i]->counter < min_counter) {
+                min_counter = task[i]->counter;
+                next = task[i];
+            }
         }
-        SJF_schedule();
+
+        if (min_counter == COUNTER_MAX+1) {
+            for (int i = 1; i < NR_TASKS; i++) {
+                task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
+                printk("SET [PID = %d COUNTER = %d]\n", task[i]->pid, task[i]->counter);
+            }
+        }
+        else break;
     }
 
     switch_to(next);
@@ -132,12 +133,23 @@ void SJF_schedule() {
 
 void Priority_schedule() {
     struct task_struct* next = current;
-    uint64 min_priority = -1;
-    for (int i = 1; i < NR_TASKS; i++) {
-        if (task[i]->priority < min_priority) {
-            min_priority = task[i]->counter;
-            next = task[i];
+    uint64 max_priority = PRIORITY_MIN-1;
+    while (1) {
+        for (int i = 1; i < NR_TASKS; i++) {
+            if (task[i]->counter == 0) continue;
+            if (task[i]->priority > max_priority) {
+                max_priority = task[i]->priority;
+                next = task[i];
+            }
         }
+
+        if (max_priority == PRIORITY_MIN-1) {
+            for (int i = 1; i < NR_TASKS; i++) {
+                task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
+                printk("SET [PID = %d PRIORITY = %d COUNTER = %d]\n", task[i]->pid, task[i]->priority, task[i]->counter);
+            }
+        }
+        else break;
     }
 
     switch_to(next);
