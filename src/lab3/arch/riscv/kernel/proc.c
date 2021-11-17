@@ -44,7 +44,8 @@ void task_init() {
         task[i]->pid = i;
         // 为 task[1] ~ task[NR_TASKS - 1] 设置 `thread_struct` 中的 `ra` 和 `sp`, 其中 `ra` 设置为 __dummy （见 4.3.2）的地址， `sp` 设置为 该线程申请的物理页的高地址
         task[i]->thread.ra = (uint64)__dummy;
-        task[i]->thread.sp = (uint64)(task[i]+PGSIZE-1);
+        task[i]->thread.sp = (uint64)(task[i])+PGSIZE;
+        // printk("task[%d]->ra = %d\n", task[i]->pid, task[i]->thread.ra);
     }
 
     // printk("OffsetOfRaInTask = %d\n", OffsetOfRaInTask);

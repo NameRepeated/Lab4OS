@@ -70,12 +70,6 @@ _traps:
     # return from trap
     sret
 
-    .global __dummy
-__dummy:
-    la t0, dummy
-    csrw sepc, t0
-    sret
-
     .globl __switch_to
 __switch_to:
     # save state to prev process
@@ -103,3 +97,9 @@ __switch_to:
     .endr
 
     ret
+
+    .globl __dummy
+__dummy:
+    la t0, dummy
+    csrw sepc, t0
+    sret
