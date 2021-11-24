@@ -69,10 +69,12 @@ void dummy() {
 void switch_to(struct task_struct* next) {
     if (current != next) {
     #ifdef SJF
+        printk("\n");
         printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
     #endif 
 
     #ifdef PRIORITY
+        printk("\n");
         printk("switch to [PID = %d PRIORITY = %d COUNTER = %d]\n", next->pid, next->priority, next->counter);
     #endif
 
@@ -112,7 +114,7 @@ void SJF_schedule() {
     uint64 min_counter = COUNTER_MAX+1;
     while (1) {
         for (int i = 1; i < NR_TASKS; i++) {
-            if (task[i]->counter == 0) continue;
+            if (task[i]->state != TASK_RUNNING || task[i]->counter == 0) continue;
             if (task[i]->counter < min_counter) {
                 min_counter = task[i]->counter;
                 next = task[i];
@@ -122,6 +124,7 @@ void SJF_schedule() {
         if (min_counter == COUNTER_MAX+1) {
             for (int i = 1; i < NR_TASKS; i++) {
                 task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
+                if (i == 1) printk("\n");
                 printk("SET [PID = %d COUNTER = %d]\n", task[i]->pid, task[i]->counter);
             }
         }
@@ -136,7 +139,7 @@ void Priority_schedule() {
     uint64 max_priority = PRIORITY_MIN-1;
     while (1) {
         for (int i = 1; i < NR_TASKS; i++) {
-            if (task[i]->counter == 0) continue;
+            if (task[i]->state != TASK_RUNNING || task[i]->counter == 0) continue;
             if (task[i]->priority > max_priority) {
                 max_priority = task[i]->priority;
                 next = task[i];
@@ -146,6 +149,7 @@ void Priority_schedule() {
         if (max_priority == PRIORITY_MIN-1) {
             for (int i = 1; i < NR_TASKS; i++) {
                 task[i]->counter = rand()%(COUNTER_MAX-COUNTER_MIN+1)+COUNTER_MIN;
+                if (i == 1) printk("\n");
                 printk("SET [PID = %d PRIORITY = %d COUNTER = %d]\n", task[i]->pid, task[i]->priority, task[i]->counter);
             }
         }
