@@ -102,7 +102,7 @@ void switch_to(struct task_struct* next) {
     if (current != next) {
     #ifdef SJF
         // printk("\n");
-        printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
+        // printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
     #endif 
 
     #ifdef PRIORITY
@@ -145,7 +145,7 @@ void SJF_schedule() {
     struct task_struct* next = current;
     unsigned long min_counter = COUNTER_MAX+1;
     while (1) {
-        for (int i = 1; i < NR_TASKS; i++) {
+        for (int i = NR_TASKS; i > 0; i--) {
             if (task[i]->counter == 0) continue;
             if (task[i]->counter < min_counter) {
                 min_counter = task[i]->counter;

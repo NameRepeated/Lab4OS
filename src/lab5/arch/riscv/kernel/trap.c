@@ -10,6 +10,8 @@ void trap_handler(unsigned long scause, unsigned long sepc, struct pt_regs *regs
     // `clock_set_next_event()` 见 4.5 节
     // 其他interrupt / exception 可以直接忽略
 
+    // printk("scause: 0x%lx, sepc: %lx\n", scause, sepc);
+
     if (scause & (1LL << 63)) {
         if (scause ^ (1LL << 63) == 5) {
             // printk("kernel is running!\n");
