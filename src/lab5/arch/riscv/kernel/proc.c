@@ -57,12 +57,15 @@ void task_init() {
 
         pagetable_t pgtbl = (pagetable_t)kalloc();
         memcpy(pgtbl, swapper_pg_dir, PGSIZE);
+
         unsigned long va = USER_START;
         unsigned long pa = (unsigned long)(uapp_start)-PA2VA_OFFSET;
         create_mapping(pgtbl, va, pa, (unsigned long)(uapp_end)-(unsigned long)(uapp_start), 31);
+
         va = USER_END-PGSIZE;
         pa = task[i]->user_sp-PA2VA_OFFSET;
         create_mapping(pgtbl, va, pa, PGSIZE, 23);
+        
         unsigned long satp = csr_read(satp);
         satp = (satp >> 44) << 44;
         satp |= ((unsigned long)pgtbl-PA2VA_OFFSET) >> 12;
@@ -101,8 +104,8 @@ void dummy() {
 void switch_to(struct task_struct* next) {
     if (current != next) {
     #ifdef SJF
-        // printk("\n");
-        // printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
+        printk("\n");
+        printk("switch to [PID = %d COUNTER = %d]\n", next->pid, next->counter);
     #endif 
 
     #ifdef PRIORITY

@@ -9,7 +9,7 @@
 #define PRIORITY_MAX 10
 
 #define COUNTER_MIN 1
-#define COUNTER_MAX 1
+#define COUNTER_MAX 10
 
 #define OFFSET(TYPE , MEMBER) ((unsigned long)(&(((TYPE *)0)->MEMBER)))
 

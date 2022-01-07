@@ -62,7 +62,7 @@ _traps_switch:
     # call trap_handler
     csrr a0, scause
     mv a1, t0
-    addi a2, sp, 0
+    mv a2, sp
     call trap_handler
 
     # restore sepc and 32 registers (x2(sp) should be restore last) from stack
