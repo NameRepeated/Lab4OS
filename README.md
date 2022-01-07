@@ -9,7 +9,7 @@
 └── src/        # 个人代码
 ```
 
-本学期共布置 5 个必做实验（Lab 0~Lab 4）和 2 个 Bonus 实验（Lab 5~Lab 6），具体介绍可见[实验手册](https://zjusec.gitee.io/os21fall/)。各实验简要内容如下：
+本学期共布置 5 个必做实验（Lab 0-Lab 4）和 2 个 Bonus 实验（Lab 5-Lab 6），具体介绍可见[实验手册](https://zjusec.gitee.io/os21fall/)。各实验简要内容如下：
 
 - Lab 0: GDB + QEMU 调试 64 位 RISC-V LINUX
 
@@ -25,4 +25,4 @@
 
 - Lab 6: RV64 缺页异常处理以及 fork 机制
 
-该仓库中是个人完成的 Lab0~Lab5 的实验内容，仅供学习参考，欢迎积极讨论。
+该仓库中是个人完成的 Lab0-Lab5 的实验内容，仅供学习参考，欢迎积极讨论。
